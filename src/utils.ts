@@ -46,3 +46,15 @@ export function softmax (x: number[], temperature?: number): number[] {
   const sum = exp.reduce((a, b) => a + b)
   return exp.map((v) => v / sum)
 }
+
+export function weightedRandom<T> (elements: T[], weights: number[]): T {
+  const sum = weights.reduce((a, b) => a + b, 0)
+  const r = Math.random() * sum
+  let i = 0
+  let weight = weights[i]
+  while (r > weight) {
+    i++
+    weight += weights[i]
+  }
+  return elements[i]
+}
