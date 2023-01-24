@@ -1,3 +1,4 @@
+import 'dotenv/config'
 const NG_WORDS = JSON.parse(process.env.NG_WORDS ?? '{}') as Record<string, string[]>
 
 function getRandomHeart (): string {
@@ -5,7 +6,7 @@ function getRandomHeart (): string {
   return hearts[Math.floor(Math.random() * hearts.length)]
 }
 
-function mesugakinize (s: string): string {
+export function mesugakinize (s: string): string {
   const abusiveWords = [
     'うるせえ', '馬鹿', '糞',
     'バカ', 'アホ', 'ドジ', 'マヌケ', 'カス', 'クソ', 'クズ',
@@ -13,7 +14,7 @@ function mesugakinize (s: string): string {
   ]
   for (const word of abusiveWords) {
     if (s.includes(word)) {
-      s = s.replaceAll(word, getRandomHeart())
+      s = s.replaceAll(word, word + getRandomHeart())
     }
   }
   return s
@@ -29,6 +30,8 @@ export function cleaning (s: string): string {
   // remove @
   s = s.replace(/[@＠]/g, '')
 
+  s = mesugakinize(s)
+
   for (const wordList of Object.values(NG_WORDS)) {
     for (const word of wordList) {
       const heart = getRandomHeart()
@@ -36,7 +39,7 @@ export function cleaning (s: string): string {
     }
   }
 
-  return mesugakinize(s)
+  return s
 }
 
 export function softmax (x: number[], temperature?: number): number[] {
@@ -68,16 +71,16 @@ export function extractFirstBracketContents (s: string): string {
   }
   let brackets = 1
   let idx = start
-  for (const char of s.slice(start)) {
+  for (const c of s.slice(start)) {
+    if (c === '「') {
+      brackets++
+    } else if (c === '」') {
+      brackets--
+    }
     if (brackets === 0) {
       break
     }
     idx++
-    if (char === '「') {
-      brackets++
-    } else if (char === '」') {
-      brackets--
-    }
   }
   return s.slice(start, idx)
 }
