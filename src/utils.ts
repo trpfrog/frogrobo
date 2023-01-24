@@ -37,3 +37,12 @@ export function cleaning (s: string): string {
   return mesugakinize(s)
 }
 
+export function softmax (x: number[], temperature?: number): number[] {
+  if (typeof temperature === 'undefined' || temperature <= 0 || isNaN(temperature)) {
+    temperature = 1
+  }
+  const maximum = Math.max(...x)
+  const exp = x.map((v) => Math.exp((v - maximum) / (temperature ?? 1)))
+  const sum = exp.reduce((a, b) => a + b)
+  return exp.map((v) => v / sum)
+}
