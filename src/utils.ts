@@ -1,3 +1,5 @@
+const NG_WORDS = JSON.parse(process.env.NG_WORDS ?? '{}') as Record<string, string[]>
+
 function getRandomHeart (): string {
   const hearts = ['❤️', '🧡', '💛', '💚', '💙', '💜', '💗', '💖', '💓', '💕', '💝']
   return hearts[Math.floor(Math.random() * hearts.length)]
