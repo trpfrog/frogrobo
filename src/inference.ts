@@ -28,7 +28,6 @@ export type TextGenerationPayload = InferencePayload & {
 
 export type TextToImagePayload = InferencePayload & {
   inputs: string
-  parameters?: TextGenerationParameters
 }
 
 export async function hfQuery (
