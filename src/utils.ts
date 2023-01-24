@@ -60,3 +60,24 @@ export function weightedRandom<T> (elements: T[], weights: number[]): T {
   }
   return elements[i]
 }
+
+export function extractFirstBracketContents (s: string): string {
+  const start = s.indexOf('「') + 1
+  if (start === 0) {
+    return ''
+  }
+  let brackets = 1
+  let idx = start
+  for (const char of s.slice(start)) {
+    if (brackets === 0) {
+      break
+    }
+    idx++
+    if (char === '「') {
+      brackets++
+    } else if (char === '」') {
+      brackets--
+    }
+  }
+  return s.slice(start, idx)
+}
