@@ -1,5 +1,5 @@
-import { cleaning, extractFirstBracketContents, softmax, weightedRandom } from './utils'
-import { gptQuery } from './inference'
+import { cleaning, extractFirstBracketContents, softmax, weightedRandom } from '../utils'
+import { gptQuery } from './queries'
 
 export class TextGenerator {
   constructor (private readonly prompt: string) {}
