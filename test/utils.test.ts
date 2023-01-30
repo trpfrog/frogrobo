@@ -1,4 +1,4 @@
-import { cleaning, extractFirstBracketContents, mesugakinize, softmax, weightedRandom } from '../src/utils'
+import { asyncFilter, cleaning, extractFirstBracketContents, mesugakinize, softmax, weightedRandom } from '../src/utils'
 
 describe('Text Cleaning', () => {
   const hearts = ['❤️', '🧡', '💛', '💚', '💙', '💜', '💗', '💖', '💓', '💕', '💝']
@@ -101,4 +101,11 @@ test.each([
 ])('extractFirstBracketContents', ({ input, output }) => {
   const s = extractFirstBracketContents(input)
   expect(s).toBe(output)
+})
+
+// test for asyncFilter
+test('asyncFilter', async () => {
+  const arr = [1, 2, 3, 4, 5]
+  const res = await asyncFilter(arr, async (x) => x % 2 === 0)
+  expect(res).toEqual([2, 4])
 })
