@@ -2,10 +2,13 @@ import * as ff from '@google-cloud/functions-framework'
 import 'dotenv/config'
 import * as crypto from 'crypto'
 import { StatusCodes } from 'http-status-codes'
+import { Bot } from './bot'
+import actions from './actions'
 
 function webhookChallenge (req: ff.Request, res: ff.Response): void {
   if (typeof req.params.crc_token !== 'undefined') {
     const consumerSecret = JSON.parse(process.env.TWITTER_TOKEN_JSON ?? '').consumer_secret ?? ''
+
     const sha256hashDigest = crypto
       .createHmac('sha256', consumerSecret)
       .update(req.body?.crc_token ?? '')
@@ -21,6 +24,12 @@ function webhookChallenge (req: ff.Request, res: ff.Response): void {
   }
 }
 
+async function action (body: any): Promise<void> {
+  const bot = new Bot()
+  actions.forEach(bot.addListener)
+  await bot.run(body)
+}
+
 ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   // const params = req.params
@@ -29,7 +38,7 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
   if (req.method === 'GET') {
     webhookChallenge(req, res)
   } else if (req.method === 'POST') {
-    res.send({ error: 'POST not implemented' })
+    await action(req.body)
   } else {
     res.send({ error: 'Invalid request' })
   }
