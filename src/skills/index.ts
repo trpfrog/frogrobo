@@ -1,7 +1,10 @@
 import { type AccountActivityListener } from '../bot'
+import gptReply from './gptReply'
+import autoFollow from './autoFollow'
 
 const actions: AccountActivityListener[] = [
-  // TODO: Add listeners here
+  autoFollow,
+  gptReply
 ]
 
 export default actions
