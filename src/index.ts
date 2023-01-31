@@ -3,7 +3,7 @@ import 'dotenv/config'
 import * as crypto from 'crypto'
 import { StatusCodes } from 'http-status-codes'
 import { Bot } from './bot'
-import actions from './actions'
+import actions from './skills'
 
 function webhookChallenge (req: ff.Request, res: ff.Response): void {
   if (typeof req.params.crc_token !== 'undefined') {
@@ -26,7 +26,7 @@ function webhookChallenge (req: ff.Request, res: ff.Response): void {
 
 async function action (body: any): Promise<void> {
   const bot = new Bot()
-  actions.forEach(bot.addListener)
+  actions.forEach(act => { bot.addListener(act) })
   await bot.run(body)
 }
 
