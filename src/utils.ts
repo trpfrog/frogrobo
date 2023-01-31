@@ -89,3 +89,15 @@ export async function asyncFilter<T> (arr: T[], predicate: (t: T) => Promise<boo
   const results = await Promise.all(arr.map(predicate))
   return arr.filter((_v, index) => results[index])
 }
+
+export function stringNumberCompareFn (a: string, b: string): -1 | 0 | 1 {
+  const aNum = BigInt(a)
+  const bNum = BigInt(b)
+  if (aNum < bNum) {
+    return -1
+  } else if (aNum > bNum) {
+    return 1
+  } else {
+    return 0
+  }
+}
