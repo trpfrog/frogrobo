@@ -44,13 +44,16 @@ export interface AccountActivityListener {
 
 export class Bot {
   private readonly client: TwitterApi
-  private readonly listeners: Array<Required<AccountActivityListener>> = []
+  private readonly listeners: Array<Required<AccountActivityListener>>
+  public readonly userId: string
 
   /**
    * Create a new bot.
    */
   constructor () {
     this.client = new TwitterApi(TWITTER_TOKEN_JSON.bearer_token)
+    this.listeners = []
+    this.userId = '2744579940'
   }
 
   /**
@@ -77,15 +80,17 @@ export class Bot {
     for (const listener of this.listeners) {
       if (eventPayload.tweet_create_events != null) {
         eventPayload.tweet_create_events = await asyncFilter(
-          eventPayload.tweet_create_events, async e => (
-            await listener.onTweetCreated(e, this.client)
+          eventPayload.tweet_create_events.filter(e => e.user.id_str !== this.userId),
+          async e => (
+            !await listener.onTweetCreated(e, this.client)
           )
         )
       }
       if (eventPayload.favorite_events != null) {
         eventPayload.favorite_events = await asyncFilter(
-          eventPayload.favorite_events, async e => (
-            await listener.onFavorited(e, this.client)
+          eventPayload.favorite_events.filter(e => e.user.id_str !== this.userId),
+          async e => (
+            !await listener.onFavorited(e, this.client)
           )
         )
       }
@@ -93,17 +98,18 @@ export class Bot {
         eventPayload.follow_events = await asyncFilter(
           eventPayload.follow_events, async e => {
             if (e.type === 'follow') {
-              return await listener.onFollowed(e, this.client)
+              return !await listener.onFollowed(e, this.client)
             } else {
-              return await listener.onUnfollowed(e, this.client)
+              return !await listener.onUnfollowed(e, this.client)
             }
           }
         )
       }
       if (eventPayload.direct_message_events != null) {
         eventPayload.direct_message_events = await asyncFilter(
-          eventPayload.direct_message_events, async e => (
-            await listener.onDirectMessaged(e, this.client)
+          eventPayload.direct_message_events.filter(e => e.message_create.sender_id !== this.userId),
+          async e => (
+            !await listener.onDirectMessaged(e, this.client)
           )
         )
       }
