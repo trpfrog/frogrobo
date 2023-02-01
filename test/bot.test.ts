@@ -21,7 +21,9 @@ describe('bot', () => {
     bot = new Bot()
     const payload: EventPayload = {
       for_user_id: '1234567890',
-      tweet_create_events: ids.map(e => ({ id: e }) as TweetCreateEvent)
+      tweet_create_events: ids.map(e =>
+        ({ id: e, user: { id_str: '123' } } as unknown as TweetCreateEvent)
+      )
     }
     const result: number[] = []
     const actions: AccountActivityListener[] = [0, 1, 2, 3, -100].map(e => ({
