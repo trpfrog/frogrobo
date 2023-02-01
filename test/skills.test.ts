@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import { type TweetSearchRecentV2Paginator, type TweetV2, type TweetV2SingleResult, TwitterApi } from 'twitter-api-v2'
-import { traceThreadTweets } from '../src/skills/gptReply'
+import gptReply, { traceThreadTweets } from '../src/skills/gptReply'
+import actions from '../src/skills'
 import * as path from 'path'
 
 it('fetches conversation and sort them', async () => {
@@ -31,4 +32,8 @@ it('fetches conversation and sort them', async () => {
   expect(singleTweetSpy).toBeCalledTimes(2)
   expect(searchSpy).toBeCalledTimes(1)
   expect(result).toEqual(conversation.expected)
+})
+
+test('gptReply should be the last one', () => {
+  expect(actions[actions.length - 1]).toBe(gptReply)
 })

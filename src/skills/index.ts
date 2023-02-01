@@ -4,6 +4,8 @@ import autoFollow from './autoFollow'
 
 const actions: AccountActivityListener[] = [
   autoFollow,
+
+  // gptReply should be the last one
   gptReply
 ]
 
