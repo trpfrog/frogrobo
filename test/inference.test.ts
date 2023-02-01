@@ -3,11 +3,12 @@ import { gptQuery } from '../src/inference/queries'
 import * as queries from '../src/inference/queries'
 import * as utils from '../src/utils'
 import { ReplyGenerator, TextGenerator } from '../src/inference/generation'
-import { cleaning } from '../src/utils'
+import * as fs from 'fs/promises'
+import * as path from 'path'
 
 describe('fetcher', () => {
   beforeEach(() => {
-    global.fetch = jest.fn().mockReturnValue(Promise.resolve({
+    jest.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({
       status: 200,
       json: async () => ([
         { generated_text: 'hello' },
@@ -15,7 +16,7 @@ describe('fetcher', () => {
       ]),
       blob: async () => new Blob(),
       arrayBuffer: async () => new ArrayBuffer(0)
-    } as Partial<Response>))
+    } as Response))
   })
   afterEach(() => { jest.restoreAllMocks() })
 
@@ -79,7 +80,7 @@ describe('Text generators', () => {
     expect(result).toBe(expected)
   })
 
-  test('ReplyGenerator should mask the invalid output', async () => {
+  test('TextGenerator should mask the invalid output', async () => {
     jest.spyOn(queries, 'gptQuery').mockReturnValue(Promise.resolve([
       '', '', 'valid', '', 'valid'
     ]))
@@ -97,5 +98,16 @@ describe('Text generators', () => {
 })
 
 describe('Diffusion models', () => {
+  beforeEach(() => {
+    jest.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({
+      status: 200,
+      arrayBuffer: async () => await fs.readFile(path.join(__dirname, 'fixtures/diffusion.jpg'))
+    } as unknown as Response))
+  })
+  afterEach(() => { jest.restoreAllMocks() })
 
+  it('generates image', async () => {
+    const result = await queries.diffusionQuery('test')
+    expect(result).toBeTruthy()
+  })
 })
