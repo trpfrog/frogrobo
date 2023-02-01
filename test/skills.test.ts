@@ -4,7 +4,7 @@ import { traceThreadTweets } from '../src/skills/gptReply'
 import * as path from 'path'
 
 it('fetches conversation and sort them', async () => {
-  const data = fs.readFileSync(path.join(__dirname, 'resources/conversation.json'), 'utf8')
+  const data = fs.readFileSync(path.join(__dirname, 'fixtures/conversation.json'), 'utf8')
   const conversation = JSON.parse(data) as {
     input: TweetV2SingleResult
     root_tweet: TweetV2SingleResult
