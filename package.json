@@ -8,7 +8,8 @@
     "start": "functions-framework --target=FrogRoboFunction",
     "debug": "./node_modules/.bin/ts-node",
     "prestart": "npm run build",
-    "gcp-build": "npm run build"
+    "gcp-build": "npm run build",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",

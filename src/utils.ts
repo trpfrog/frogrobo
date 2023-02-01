@@ -43,7 +43,7 @@ export function cleaning (s: string): string {
 }
 
 export function softmax (x: number[], temperature?: number): number[] {
-  if (typeof temperature === 'undefined' || temperature <= 0 || isNaN(temperature)) {
+  if (temperature == null || temperature <= 0 || isNaN(temperature)) {
     temperature = 1
   }
   const maximum = Math.max(...x)

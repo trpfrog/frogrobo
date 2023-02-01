@@ -45,4 +45,34 @@ describe('bot', () => {
 
     expect(result).toEqual(expected)
   })
+
+  it('should be set default listener', async () => {
+    const fn = jest.fn().mockReturnValue(true)
+    bot.addListener({})
+    bot.addListener({ onTweetCreated: async () => fn() })
+    bot.addListener({ onFollowed: async () => fn() })
+    bot.addListener({ onUnfollowed: async () => fn() })
+    bot.addListener({ onFavorited: async () => fn() })
+    bot.addListener({ onDirectMessaged: async () => fn() })
+
+    const dummyPayload = {
+      for_user_id: '1234567890',
+      tweet_create_events: [{
+        user: { id_str: '123' }
+      } as unknown as TweetCreateEvent],
+      favorite_events: [{
+        user: { id_str: '123' }
+      }],
+      follow_events: [
+        { type: 'follow' },
+        { type: 'unfollow' }
+      ],
+      direct_message_events: [{
+        message_create: { sender_id: '123' }
+      }]
+    } as unknown as EventPayload
+
+    await bot.run(dummyPayload)
+    expect(fn).toBeCalledTimes(5)
+  })
 })
