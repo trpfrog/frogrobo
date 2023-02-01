@@ -1,9 +1,4 @@
-import {
-  hfQuery,
-  type TextGenerationParameters,
-  type TextGenerationPayload,
-  type TextToImagePayload
-} from './fetcher'
+import {hfQuery, type TextGenerationParameters, type TextGenerationPayload, type TextToImagePayload} from './fetcher'
 
 export async function gptQuery (text: string, parameters?: TextGenerationParameters): Promise<string[]> {
   const payload: TextGenerationPayload = {
@@ -37,7 +32,6 @@ export async function diffusionQuery (text: string): Promise<any> {
   }
   const modelName = 'headmaking/trpfrog-icons'
   const result = await hfQuery(modelName, payload, 'arrayBuffer') as ArrayBuffer
-  const base64 = Buffer.from(result).toString('base64')
 
-  return `<img src="data:image/png;base64,${base64}">`
+  return Buffer.from(result).toString('base64')
 }

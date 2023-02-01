@@ -21,12 +21,12 @@ export interface TextGenerationParameters {
   do_sample?: boolean
 }
 
-export type TextGenerationPayload = InferencePayload & {
+export interface TextGenerationPayload extends InferencePayload {
   inputs: string
   parameters?: TextGenerationParameters
 }
 
-export type TextToImagePayload = InferencePayload & {
+export interface TextToImagePayload extends InferencePayload {
   inputs: string
 }
 
