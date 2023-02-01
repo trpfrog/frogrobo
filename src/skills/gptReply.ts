@@ -47,16 +47,16 @@ const gptReply: AccountActivityListener = {
   onTweetCreated: async (tweet, client) => {
     const IGNORE_RATIO = 0.1
     const id = tweet.id_str
-    if (Math.random() < IGNORE_RATIO) {
+    if (Math.random() > IGNORE_RATIO) {
       const threadTweets = await traceThreadTweets(id, client)
       const tweetTexts = threadTweets.map(e => e.text)
       console.log(tweetTexts)
 
       const replyGenerator = new ReplyGenerator(...tweetTexts)
-      const toReply = await replyGenerator.generate()
-      console.log('reply: ' + toReply)
+      const toReplyText = await replyGenerator.generate()
+      console.log('reply: ' + toReplyText)
 
-      await client.v2.reply(toReply, id)
+      await client.v2.reply(toReplyText, id)
     } else {
       await client.v2.like(FrogRoboID, id)
     }
