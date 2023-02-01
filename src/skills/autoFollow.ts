@@ -1,7 +1,5 @@
 import { type AccountActivityListener } from '../bot'
-
-const FrogRoboID = '2744579940'
-const TrpFrogID = '92482871'
+import { TrpFrogID, FrogRoboID } from '../bot'
 
 const autoFollow: AccountActivityListener = {
 

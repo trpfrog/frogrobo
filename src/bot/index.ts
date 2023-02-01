@@ -4,6 +4,8 @@ import 'dotenv/config'
 import { asyncFilter } from '../utils'
 
 const TWITTER_TOKEN_JSON = JSON.parse(process.env.TWITTER_TOKEN_JSON ?? '')
+export const FrogRoboID = '2744579940'
+export const TrpFrogID = '92482871'
 
 export interface AccountActivityListener {
   /**
