@@ -4,6 +4,7 @@ import 'dotenv/config'
 import { asyncFilter } from '../utils'
 import { type AccountActivityListener } from './listener'
 import { createTwitterAdapter, type SocialAdapter } from './socialAdapter'
+import { tweetDiffusionImage, tweetGeneralText } from './generalPosts'
 
 export type { AccountActivityListener } from './listener'
 
@@ -21,7 +22,14 @@ export class Bot {
    * Create a new bot.
    */
   constructor () {
-    this.client = new TwitterApi(TWITTER_TOKEN_JSON.bearer_token)
+    const token = JSON.parse(process.env.TWITTER_TOKEN_JSON!)
+    // delete x.bearer_token
+    this.client = new TwitterApi({
+      appKey: token.consumer_key,
+      appSecret: token.consumer_secret,
+      accessToken: token.access_token,
+      accessSecret: token.access_token_secret
+    })
     this.listeners = []
     this.userId = '2744579940'
     this.socialAdapter = createTwitterAdapter(this.client)
@@ -40,6 +48,16 @@ export class Bot {
       onFavorited: async () => false,
       ...listener
     })
+  }
+
+  public async tweetGenerally (): Promise<void> {
+    const IMAGE_RATIO = 0.1
+    const rand = Math.random()
+    if (rand < IMAGE_RATIO) {
+      await tweetDiffusionImage(this.client)
+    } else {
+      await tweetGeneralText(this.client)
+    }
   }
 
   /**
