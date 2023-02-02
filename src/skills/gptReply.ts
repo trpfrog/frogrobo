@@ -48,7 +48,7 @@ const gptReply: AccountActivityListener = {
     const id = tweet.id_str
     if (Math.random() > IGNORE_RATIO) {
       const threadTweets = await traceThreadTweets(id, social.rawClient)
-      const tweetTexts = threadTweets.map(e => e.text)
+      const tweetTexts = threadTweets.map(e => e.text.replace(/[@＠][a-zA-Z0-9_]+/g, ''))
       console.log(tweetTexts)
 
       const replyGenerator = new ReplyGenerator(...tweetTexts)
