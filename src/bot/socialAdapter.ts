@@ -12,27 +12,38 @@ export interface SocialAdapter<T> {
   sendDM: (userId: string, message: string) => Promise<void>
 }
 
-export const createTwitterAdapter = (client: TwitterApi): SocialAdapter<TwitterApi> => ({
-  rawClient: client,
-  post: async (message: string) => {
-    await client.v2.tweet(message)
-  },
-  reply: async (postId: string, message: string) => {
-    await client.v2.reply(message, postId)
-  },
-  giveReaction: async (postId: string) => {
-    await client.v2.like(FrogRoboID, postId)
-  },
-  removeReaction: async (postId: string) => {
-    await client.v2.unlike(FrogRoboID, postId)
-  },
-  follow: async (userId: string) => {
-    await client.v2.follow(FrogRoboID, userId)
-  },
-  unfollow: async (userId: string) => {
-    await client.v2.unfollow(FrogRoboID, userId)
-  },
-  async sendDM (userId: string, message: string): Promise<void> {
-    await client.v2.sendDmInConversation(userId, { text: message })
+export const createTwitterAdapter = (client: TwitterApi): SocialAdapter<TwitterApi> => {
+  const adapterCreatedAt = Date.now()
+  const waitFor = async (minSecond: number): Promise<void> => {
+    const waitForMs = Math.max(0, minSecond * 1000 - (Date.now() - adapterCreatedAt))
+    if (waitForMs > 0) {
+      await new Promise(resolve => setTimeout(resolve, waitForMs))
+    }
   }
-})
+  return {
+    rawClient: client,
+    post: async (message: string) => {
+      await client.v2.tweet(message)
+    },
+    reply: async (postId: string, message: string) => {
+      await waitFor(10)
+      await client.v2.reply(message, postId)
+    },
+    giveReaction: async (postId: string) => {
+      await waitFor(10)
+      await client.v2.like(FrogRoboID, postId)
+    },
+    removeReaction: async (postId: string) => {
+      await client.v2.unlike(FrogRoboID, postId)
+    },
+    follow: async (userId: string) => {
+      await client.v2.follow(FrogRoboID, userId)
+    },
+    unfollow: async (userId: string) => {
+      await client.v2.unfollow(FrogRoboID, userId)
+    },
+    async sendDM (userId: string, message: string): Promise<void> {
+      await client.v2.sendDmInConversation(userId, { text: message })
+    }
+  }
+}

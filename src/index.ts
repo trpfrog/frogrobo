@@ -4,10 +4,6 @@ import { Bot } from './bot'
 import actions from './skills'
 import { isAccessAllowed, webhookChallenge } from './auth'
 
-async function action (body: any): Promise<void> {
-  const bot = new Bot()
-}
-
 ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
   if (!isAccessAllowed(req)) {
     res.status(401)
