@@ -43,6 +43,7 @@ export const createTwitterAdapter = (client: TwitterApi): SocialAdapter<TwitterA
       await client.v2.unfollow(FrogRoboID, userId)
     },
     async sendDM (userId: string, message: string): Promise<void> {
+      await waitFor(10)
       await client.v2.sendDmInConversation(userId, { text: message })
     }
   }

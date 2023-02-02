@@ -22,7 +22,7 @@ describe('bot', () => {
     const payload: EventPayload = {
       for_user_id: '1234567890',
       tweet_create_events: ids.map(e =>
-        ({ id: e, user: { id_str: '123' } } as unknown as TweetCreateEvent)
+        ({ id: e, text: 'hello', user: { id_str: '123' } } as unknown as TweetCreateEvent)
       )
     }
     const result: number[] = []
@@ -58,9 +58,11 @@ describe('bot', () => {
     const dummyPayload = {
       for_user_id: '1234567890',
       tweet_create_events: [{
+        text: 'hello',
         user: { id_str: '123' }
       } as unknown as TweetCreateEvent],
       favorite_events: [{
+        text: 'hello',
         user: { id_str: '123' }
       }],
       follow_events: [
