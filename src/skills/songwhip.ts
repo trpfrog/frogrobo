@@ -57,7 +57,7 @@ const fetchSongLink = async (songLink: string): Promise<SongwhipResult> => {
 }
 
 const songwhipReply: AccountActivityListener = {
-  onTweetCreated: async (tweet, client) => {
+  onTweetCreated: async (tweet, social) => {
     const id = tweet.id_str
     const text = tweet.text
     const songLinkRegex = /https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+/
@@ -69,7 +69,7 @@ const songwhipReply: AccountActivityListener = {
 
     const link = songLink[0]
     const songInfo = await fetchSongLink(link)
-    await client.v2.reply(songInfo.url, id)
+    await social.reply(id, songInfo.url)
     return true
   }
 }

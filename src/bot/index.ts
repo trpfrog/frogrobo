@@ -3,6 +3,7 @@ import type * as ev from './eventTypes'
 import 'dotenv/config'
 import { asyncFilter } from '../utils'
 import { type AccountActivityListener } from './listener'
+import { createTwitterAdapter, type SocialAdapter } from './socialAdapter'
 
 export type { AccountActivityListener } from './listener'
 
@@ -14,6 +15,7 @@ export class Bot {
   private readonly client: TwitterApi
   private readonly listeners: Array<Required<AccountActivityListener>>
   public readonly userId: string
+  private readonly socialAdapter: SocialAdapter<TwitterApi>
 
   /**
    * Create a new bot.
@@ -22,6 +24,7 @@ export class Bot {
     this.client = new TwitterApi(TWITTER_TOKEN_JSON.bearer_token)
     this.listeners = []
     this.userId = '2744579940'
+    this.socialAdapter = createTwitterAdapter(this.client)
   }
 
   /**
@@ -50,7 +53,7 @@ export class Bot {
         eventPayload.tweet_create_events = await asyncFilter(
           eventPayload.tweet_create_events.filter(e => e.user.id_str !== this.userId),
           async e => (
-            !await listener.onTweetCreated(e, this.client)
+            !await listener.onTweetCreated(e, this.socialAdapter)
           )
         )
       }
@@ -58,7 +61,7 @@ export class Bot {
         eventPayload.favorite_events = await asyncFilter(
           eventPayload.favorite_events.filter(e => e.user.id_str !== this.userId),
           async e => (
-            !await listener.onFavorited(e, this.client)
+            !await listener.onFavorited(e, this.socialAdapter)
           )
         )
       }
@@ -66,9 +69,9 @@ export class Bot {
         eventPayload.follow_events = await asyncFilter(
           eventPayload.follow_events, async e => {
             if (e.type === 'follow') {
-              return !await listener.onFollowed(e, this.client)
+              return !await listener.onFollowed(e, this.socialAdapter)
             } else {
-              return !await listener.onUnfollowed(e, this.client)
+              return !await listener.onUnfollowed(e, this.socialAdapter)
             }
           }
         )
@@ -77,7 +80,7 @@ export class Bot {
         eventPayload.direct_message_events = await asyncFilter(
           eventPayload.direct_message_events.filter(e => e.message_create.sender_id !== this.userId),
           async e => (
-            !await listener.onDirectMessaged(e, this.client)
+            !await listener.onDirectMessaged(e, this.socialAdapter)
           )
         )
       }

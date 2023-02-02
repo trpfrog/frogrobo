@@ -1,7 +1,6 @@
 import { type AccountActivityListener } from '../bot'
 import { ReplyGenerator } from '../inference/generation'
 import { type TweetV2, type TwitterApi } from 'twitter-api-v2'
-import { FrogRoboID } from '../bot'
 
 export async function traceThreadTweets (statusId: string, client: TwitterApi): Promise<TweetV2[]> {
   const result = await client.v2.singleTweet(statusId, {
@@ -44,11 +43,11 @@ export async function traceThreadTweets (statusId: string, client: TwitterApi): 
 }
 
 const gptReply: AccountActivityListener = {
-  onTweetCreated: async (tweet, client) => {
+  onTweetCreated: async (tweet, social) => {
     const IGNORE_RATIO = 0.1
     const id = tweet.id_str
     if (Math.random() > IGNORE_RATIO) {
-      const threadTweets = await traceThreadTweets(id, client)
+      const threadTweets = await traceThreadTweets(id, social.rawClient)
       const tweetTexts = threadTweets.map(e => e.text)
       console.log(tweetTexts)
 
@@ -56,9 +55,9 @@ const gptReply: AccountActivityListener = {
       const toReplyText = await replyGenerator.generate()
       console.log('reply: ' + toReplyText)
 
-      await client.v2.reply(toReplyText, id)
+      await social.reply(id, toReplyText)
     } else {
-      await client.v2.like(FrogRoboID, id)
+      await social.giveReaction(id)
     }
     return true
   }
