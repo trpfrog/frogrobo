@@ -69,7 +69,9 @@ export class Bot {
     for (const listener of this.listeners) {
       if (eventPayload.tweet_create_events != null) {
         eventPayload.tweet_create_events = await asyncFilter(
-          eventPayload.tweet_create_events.filter(e => e.user.id_str !== this.userId),
+          eventPayload.tweet_create_events
+            .filter(e => e.user.id_str !== this.userId)
+            .filter(e => !e.text.trim().startsWith('RT @')),
           async e => (
             !await listener.onTweetCreated(e, this.socialAdapter)
           )
