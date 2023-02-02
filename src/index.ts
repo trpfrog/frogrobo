@@ -19,8 +19,13 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
   if (req.method === 'GET') {
     webhookChallenge(req, res)
   } else if (req.method === 'POST') {
+    const bot = new Bot()
+    if ('general' in req.params) {
+      await bot.tweetGenerally()
+    } else {
       actions.forEach(act => { bot.addListener(act) })
       await bot.run(req.body)
+    }
   } else {
     res.send({ error: 'Invalid request' })
   }
