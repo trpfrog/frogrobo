@@ -1,7 +1,15 @@
 import * as fs from 'fs'
-import { type TweetSearchRecentV2Paginator, type TweetV2, type TweetV2SingleResult, TwitterApi } from 'twitter-api-v2'
+import {
+  type TweetSearchRecentV2Paginator,
+  type TweetV1,
+  type TweetV2,
+  type TweetV2SingleResult,
+  TwitterApi
+} from 'twitter-api-v2'
 import gptReply, { traceThreadTweets } from './gptReply'
 import actions from './index'
+import songwhipReply from './songwhip'
+import { debugAdapter } from '../bot/socialResponse'
 
 it('fetches conversation and sort them', async () => {
   const data = fs.readFileSync('fixtures/conversation.json', 'utf8')
@@ -35,4 +43,29 @@ it('fetches conversation and sort them', async () => {
 
 test('gptReply should be the last one', () => {
   expect(actions[actions.length - 1]).toBe(gptReply)
+})
+
+test('songwhip returns a valid url', async () => {
+  const url = 'https://music.line.me/webapp/album/mb0000000001d8d85a'
+  const tweet = {
+    id_str: '1234567890',
+    text: `#nowPlaying ${url} @FrogRobo`
+  } as unknown as TweetV1
+
+  const printed: string[] = []
+  const spy = jest.spyOn(console, 'log').mockImplementation(x => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    printed.push(`${x}`)
+  })
+  await (songwhipReply.onTweetCreated ?? (() => {}))(tweet, debugAdapter as any)
+
+  const composer = 'ねぎ一世'
+  const title = 'つまみのうた (feat. 東北ずん子)'
+  const encodedTitle = encodeURIComponent('つまみのうた-feat-東北ずん子')
+  const songwhipUrl = `https://songwhip.com/${encodeURIComponent(composer)}/${encodedTitle}`
+
+  expect(printed).toEqual([
+    `reply to 1234567890: 🎵 ${composer} - ${title}\n${songwhipUrl}`
+  ])
+  spy.mockRestore()
 })
