@@ -13,6 +13,7 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
 
   if (req.method === 'GET') {
     webhookChallenge(req, res)
+    return
   } else if (req.method === 'POST') {
     const bot = new Bot()
     if ('general' in req.query) {
@@ -23,5 +24,7 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
     }
   } else {
     res.send({ error: 'Invalid request' })
+    return
   }
+  res.send({ status: 'OK' })
 })
