@@ -1,5 +1,5 @@
-import { type AccountActivityListener, Bot } from '../src/bot'
-import { type EventPayload, type TweetCreateEvent } from '../src/bot/eventTypes'
+import { type AccountActivityListener, Bot } from './index'
+import { type EventPayload, type TweetCreateEvent } from './eventTypes'
 
 describe('bot', () => {
   let bot: Bot

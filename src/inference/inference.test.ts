@@ -1,10 +1,9 @@
-import { hfQuery, TextGenerationPayload } from '../src/inference/fetcher'
-import { gptQuery } from '../src/inference/queries'
-import * as queries from '../src/inference/queries'
-import * as utils from '../src/utils'
-import { ReplyGenerator, TextGenerator } from '../src/inference/generation'
+import { hfQuery } from './fetcher'
+import { gptQuery } from './queries'
+import * as queries from './queries'
+import * as utils from '../utils'
+import { ReplyGenerator, TextGenerator } from './generation'
 import * as fs from 'fs/promises'
-import * as path from 'path'
 
 describe('fetcher', () => {
   beforeEach(() => {
@@ -101,7 +100,7 @@ describe('Diffusion models', () => {
   beforeEach(() => {
     jest.spyOn(global, 'fetch').mockReturnValue(Promise.resolve({
       status: 200,
-      arrayBuffer: async () => await fs.readFile(path.join(__dirname, 'fixtures/diffusion.jpg'))
+      arrayBuffer: async () => await fs.readFile('./fixtures/diffusion.jpg')
     } as unknown as Response))
   })
   afterEach(() => { jest.restoreAllMocks() })

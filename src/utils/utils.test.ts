@@ -6,7 +6,7 @@ import {
   softmax,
   stringNumberCompareFn,
   weightedRandom
-} from '../src/utils'
+} from './index'
 
 describe('Text Cleaning', () => {
   const hearts = ['❤️', '🧡', '💛', '💚', '💙', '💜', '💗', '💖', '💓', '💕', '💝']

@@ -1,11 +1,10 @@
 import * as fs from 'fs'
 import { type TweetSearchRecentV2Paginator, type TweetV2, type TweetV2SingleResult, TwitterApi } from 'twitter-api-v2'
-import gptReply, { traceThreadTweets } from '../src/skills/gptReply'
-import actions from '../src/skills'
-import * as path from 'path'
+import gptReply, { traceThreadTweets } from './gptReply'
+import actions from './index'
 
 it('fetches conversation and sort them', async () => {
-  const data = fs.readFileSync(path.join(__dirname, 'fixtures/conversation.json'), 'utf8')
+  const data = fs.readFileSync('fixtures/conversation.json', 'utf8')
   const conversation = JSON.parse(data) as {
     input: TweetV2SingleResult
     root_tweet: TweetV2SingleResult
