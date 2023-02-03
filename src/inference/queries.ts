@@ -27,7 +27,7 @@ export async function diffusionQuery (text: string): Promise<ArrayBuffer> {
   const payload: TextToImagePayload = {
     inputs: text,
     options: {
-      use_cache: true
+      use_cache: false
     }
   }
   const modelName = 'headmaking/trpfrog-icons'
