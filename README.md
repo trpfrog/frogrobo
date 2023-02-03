@@ -1,6 +1,6 @@
-# frogrobo
+# @FrogRobo
 
-つまみさんの Twitter bot [@FrogRobo](https://twitter.com/FrogRobo) のリポジトリです。
+つまみさんの Twitter bot つまみロボ ([@FrogRobo](https://twitter.com/FrogRobo)) のリポジトリです。
 
 ## ⚠️ 注意
 
@@ -8,7 +8,7 @@
 
 **なぜか過激発言ばかりする**ので注意してください。また、問題のあるツイートを発見した場合は管理者 (@TrpFrog) までご一報ください。
 
-## 機能
+## 🤖 機能
 
 ### ランダムツイート
 
@@ -44,3 +44,7 @@ an icon of trpfrog
 - つまみロボへのメンションである
 
 上記の条件をすべて満たしたツイートに対して、[Songwhip](https://songwhip.com/) を使ってリンク集を返します。
+
+## 🔧 システム構成図
+
+![](fixtures/frogrobo-system.jpeg)
