@@ -10,13 +10,12 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
     res.send({ error: 'Unauthorized' })
     return
   }
-  console.log(req.params)
 
   if (req.method === 'GET') {
     webhookChallenge(req, res)
   } else if (req.method === 'POST') {
     const bot = new Bot()
-    if ('general' in req.params) {
+    if ('general' in req.query) {
       await bot.tweetGenerally()
     } else {
       actions.forEach(act => { bot.addListener(act) })

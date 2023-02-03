@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { StatusCodes } from 'http-status-codes'
 
 export function webhookChallenge (req: ff.Request, res: ff.Response): void {
-  if (typeof req.params.crc_token !== 'undefined') {
+  if (typeof req.query.crc_token !== 'undefined') {
     const consumerSecret = JSON.parse(process.env.TWITTER_TOKEN_JSON ?? '').consumer_secret ?? ''
 
     const sha256hashDigest = crypto
@@ -22,8 +22,8 @@ export function webhookChallenge (req: ff.Request, res: ff.Response): void {
 }
 
 export function isAccessAllowed (req: ff.Request): boolean {
-  if ('trpfrog-webhook-token' in req.params) {
-    return req.params['trpfrog-webhook-token'] === process.env.TRPFROG_WEBHOOK_TOKEN
+  if ('trpfrog-webhook-token' in req.query) {
+    return req.query['trpfrog-webhook-token'] === process.env.TRPFROG_WEBHOOK_TOKEN
   } else {
     return false
   }
