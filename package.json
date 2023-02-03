@@ -4,12 +4,13 @@
   "description": "A Twitter bot created by TrpFrog using TypeScript and Cloud Functions",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "start": "functions-framework --target=FrogRoboFunction",
     "debug": "./node_modules/.bin/ts-node",
     "prestart": "npm run build",
-    "gcp-build": "npm run build",
-    "test": "jest --coverage"
+    "gcp-build": "",
+    "test": "jest --coverage",
+    "deploy": "npm run build && ./deploy.sh"
   },
   "repository": {
     "type": "git",
