@@ -1,7 +1,7 @@
 import { type TwitterApi } from 'twitter-api-v2'
 import { FrogRoboID } from './index'
 
-export interface SocialAdapter<T> {
+export interface SocialResponse<T> {
   rawClient: T
   post: (message: string) => Promise<void>
   reply: (postId: string, message: string) => Promise<void>
@@ -12,7 +12,7 @@ export interface SocialAdapter<T> {
   sendDM: (userId: string, message: string) => Promise<void>
 }
 
-export const createTwitterAdapter = (client: TwitterApi): SocialAdapter<TwitterApi> => {
+export const createTwitterAdapter = (client: TwitterApi): SocialResponse<TwitterApi> => {
   const adapterCreatedAt = Date.now()
   const waitFor = async (minSecond: number): Promise<void> => {
     const waitForMs = Math.max(0, minSecond * 1000 - (Date.now() - adapterCreatedAt))
@@ -42,9 +42,34 @@ export const createTwitterAdapter = (client: TwitterApi): SocialAdapter<TwitterA
     unfollow: async (userId: string) => {
       await client.v2.unfollow(FrogRoboID, userId)
     },
-    async sendDM (userId: string, message: string): Promise<void> {
+    sendDM: async (userId: string, message: string) => {
       await waitFor(10)
       await client.v2.sendDmInConversation(userId, { text: message })
     }
+  }
+}
+
+export const debugAdapter: SocialResponse<null> = {
+  rawClient: null,
+  post: async (message: string) => {
+    console.log('post: ' + message)
+  },
+  reply: async (postId: string, message: string) => {
+    console.log(`reply to ${postId}: ${message}`)
+  },
+  giveReaction: async (postId: string) => {
+    console.log('giveReaction: ' + postId)
+  },
+  removeReaction: async (postId: string) => {
+    console.log('removeReaction: ' + postId)
+  },
+  follow: async (userId: string) => {
+    console.log('follow: ' + userId)
+  },
+  unfollow: async (userId: string) => {
+    console.log('unfollow: ' + userId)
+  },
+  sendDM: async (userId: string, message: string) => {
+    console.log(`sendDM to ${userId}: ${message}`)
   }
 }

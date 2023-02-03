@@ -3,7 +3,7 @@ import type * as ev from './eventTypes'
 import 'dotenv/config'
 import { asyncFilter } from '../utils'
 import { type AccountActivityListener } from './listener'
-import { createTwitterAdapter, type SocialAdapter } from './socialAdapter'
+import { createTwitterAdapter, type SocialResponse } from './socialResponse'
 import { tweetDiffusionImage, tweetGeneralText } from './generalPosts'
 
 export type { AccountActivityListener } from './listener'
@@ -16,7 +16,7 @@ export class Bot {
   private readonly client: TwitterApi
   private readonly listeners: Array<Required<AccountActivityListener>>
   public readonly userId: string
-  private readonly socialAdapter: SocialAdapter<TwitterApi>
+  private readonly socialAdapter: SocialResponse<TwitterApi>
 
   /**
    * Create a new bot.
