@@ -3,12 +3,12 @@ import crypto from 'crypto'
 import { StatusCodes } from 'http-status-codes'
 
 export function webhookChallenge (req: ff.Request, res: ff.Response): void {
-  if (typeof req.query.crc_token !== 'undefined') {
+  if ('crc_token' in req.query) {
     const consumerSecret = JSON.parse(process.env.TWITTER_TOKEN_JSON ?? '').consumer_secret ?? ''
 
     const sha256hashDigest = crypto
       .createHmac('sha256', consumerSecret)
-      .update(req.body?.crc_token ?? '')
+      .update((req.query.crc_token as string) ?? '')
       .digest('base64')
 
     res.status(StatusCodes.OK)
