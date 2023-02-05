@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+SECRET_ENV="HF_TOKEN=HuggingFace:latest"
+SECRET_ENV="$SECRET_ENV,TWITTER_TOKEN_JSON=Twitter:latest"
+SECRET_ENV="$SECRET_ENV,TRPFROG_WEBHOOK_TOKEN=FrogRoboWebhookToken:latest"
+SECRET_ENV="$SECRET_ENV,NG_WORDS=NGWords:latest"
+
 gcloud functions deploy tweet \
   --entry-point='FrogRoboFunction' \
   --runtime=nodejs18 \
@@ -8,4 +13,5 @@ gcloud functions deploy tweet \
   --project=twitter-frog-robo \
   --timeout=180 \
   --allow-unauthenticated \
-  --set-secrets 'HF_TOKEN=HuggingFace:latest,TWITTER_TOKEN_JSON=Twitter:latest,TRPFROG_WEBHOOK_TOKEN=FrogRoboWebhookToken:latest,NG_WORDS=NGWords:latest'
+  --clear-env-vars \
+  --set-secrets $SECRET_ENV
