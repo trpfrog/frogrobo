@@ -19,6 +19,7 @@ ff.http('FrogRoboFunction', async (req: ff.Request, res: ff.Response) => {
     if ('general' in req.query) {
       await bot.tweetGenerally()
     } else {
+      console.log(req.body)
       actions.forEach(act => { bot.addListener(act) })
       await bot.run(req.body)
     }
