@@ -8,7 +8,6 @@ import { tweetDiffusionImage, tweetGeneralText } from './generalPosts'
 
 export type { AccountActivityListener } from './listener'
 
-const TWITTER_TOKEN_JSON = JSON.parse(process.env.TWITTER_TOKEN_JSON ?? '')
 export const FrogRoboID = '2744579940'
 export const TrpFrogID = '92482871'
 
@@ -23,7 +22,6 @@ export class Bot {
    */
   constructor () {
     const token = JSON.parse(process.env.TWITTER_TOKEN_JSON!)
-    // delete x.bearer_token
     this.client = new TwitterApi({
       appKey: token.consumer_key,
       appSecret: token.consumer_secret,
